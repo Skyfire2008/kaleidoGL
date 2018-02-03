@@ -1,0 +1,14 @@
+{
+	"name": "kaleidoGL",
+	"version": "0.0.1",
+
+	"devDependencies": {
+		"browserify": "latest",
+		"watchify": "latest"
+	},
+
+	"scripts": {
+		"compile": "browserify src/kaleidoGL.js -o kaleidoGL.js",
+		"watch": "watchify src/kaleidoGL.js -o kaleidoGL.js -v"
+	}
+}
