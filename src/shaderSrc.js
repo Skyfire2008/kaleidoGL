@@ -13,7 +13,7 @@ var frag=
 "varying vec2 UV;" +
 "" +
 "void main(){" +
-"	gl_FragColor=vec4(0.7, 0.8, 0.9, 1.0);" +
+"	gl_FragColor=vec4(UV, 1.0, 1.0);" +
 "}";
 
 module.exports={
