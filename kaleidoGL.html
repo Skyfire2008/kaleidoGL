@@ -7,6 +7,19 @@
 
 	<body>
 		<script src="kaleidoGL.js"></script>
-		<canvas id="glCanvas" width="800" height="600"></canvas>
+		<div>
+			<div>
+				<label for="fileInput">Select a file from your PC:</label><br/>
+				<input type="file" id="fileInput" accept="image/*"/>
+			</div>
+			<br>
+			<div>
+				<label for="linkInput">...or select a file from the web:</label><br/>
+				<input type="text" id="linkInput"/>
+			</div>
+		</div>
+		<div>
+			<canvas id="glCanvas" width="800" height="600"></canvas>
+		</div>
 	</body>
 </html>

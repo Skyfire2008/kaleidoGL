@@ -4,11 +4,35 @@ var gl;
 
 var p;
 var quadBuf;
+var tex;
 
 var shaderSrc=require("./shaderSrc.js");
 var shader=require("./shader.js");
 
 document.addEventListener("DOMContentLoaded", function(e){
+
+	//ATTACH EVENT LISTENERS TO UI ELEMENTS
+	document.getElementById("fileInput").addEventListener("change", function(e){
+		let input=e.target;
+		if(input.files.length>0){
+
+			let fr=new FileReader();
+			let img=new Image();
+
+			fr.addEventListener("load", function(ev){
+				
+				img.addEventListener("load", function(evt){
+					tex=new shader.Texture(gl, img);
+					gl.activeTexture(gl.TEXTURE0);
+					gl.bindTexture(gl.TEXTURE_2D, tex.id);
+					gl.uniform1i(gl.getUniformLocation(p.id, "tex"), 0);
+					gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+				});
+				img.src=ev.target.result;
+			});
+			fr.readAsDataURL(input.files[0]);
+		}
+	});
 
 	//GET THE WEBGL CONTEXT
 	glCanvas=document.getElementById("glCanvas");
