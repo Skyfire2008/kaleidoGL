@@ -8,6 +8,7 @@ var tex;
 
 var shaderSrc=require("./shaderSrc.js");
 var shader=require("./shader.js");
+var vectors=require("./vectors.js");
 
 document.addEventListener("DOMContentLoaded", function(e){
 
@@ -25,7 +26,8 @@ document.addEventListener("DOMContentLoaded", function(e){
 					tex=new shader.Texture(gl, img);
 					gl.activeTexture(gl.TEXTURE0);
 					gl.bindTexture(gl.TEXTURE_2D, tex.id);
-					gl.uniform1i(gl.getUniformLocation(p.id, "tex"), 0);
+					p.setInt("tex", 0);
+					p.setVec2("imgScale", new vectors.Vec2(glCanvas.width/img.naturalWidth, glCanvas.height/img.naturalHeight));
 					gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 				});
 				img.src=ev.target.result;
@@ -61,7 +63,8 @@ document.addEventListener("DOMContentLoaded", function(e){
 		0);
 	gl.enableVertexAttribArray(gl.getAttribLocation(p.id, "pos"));
 
-	gl.useProgram(p.id);
+	p.use();
+	p.setInt("wrapMode", 1);
 
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 });
