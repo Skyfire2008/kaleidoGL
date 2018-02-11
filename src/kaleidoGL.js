@@ -4,7 +4,12 @@ var gl;
 
 var p;
 var quadBuf;
-var tex;
+var tex=null;
+
+var resXInput;
+var resYInput;
+var srcXInput;
+var srcYInput;
 
 var shaderSrc=require("./shaderSrc.js");
 var shader=require("./shader.js");
@@ -37,7 +42,31 @@ document.addEventListener("DOMContentLoaded", function(e){
 	});
 
 	document.getElementById("sectorInput").addEventListener("change", function(e){
-		p.setFloat("angle", 2*Math.PI/e.target.valueAsNumber);
+		p.setFloat("angle", Math.PI/e.target.valueAsNumber);
+		redraw();
+	});
+
+	resXInput=document.getElementById("resXInput");
+	resXInput.addEventListener("change", function(e){
+		setPoint("resPos", resXInput.valueAsNumber, resYInput.valueAsNumber);
+		redraw();
+	});
+
+	resYInput=document.getElementById("resYInput");
+	resYInput.addEventListener("change", function(e){
+		setPoint("resPos", resXInput.valueAsNumber, resYInput.valueAsNumber);
+		redraw();
+	});
+
+	srcXInput=document.getElementById("srcXInput");
+	srcXInput.addEventListener("change", function(e){
+		setPoint("srcPos", srcXInput.valueAsNumber, srcYInput.valueAsNumber);
+		redraw();
+	});
+
+	srcYInput=document.getElementById("srcYInput");
+	srcYInput.addEventListener("change", function(e){
+		setPoint("srcPos", srcXInput.valueAsNumber, srcYInput.valueAsNumber);
 		redraw();
 	});
 
@@ -75,5 +104,11 @@ document.addEventListener("DOMContentLoaded", function(e){
 });
 
 redraw=function(){
-	gl.drawArrays(gl.TRIANGLE_STRIP, 0 ,4);
+	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+};
+
+setPoint=function(name, x, y){
+	if(tex!=null) {
+		p.setVec2(name, new vectors.Vec2(x / glCanvas.width, y / glCanvas.height));
+	}
 };

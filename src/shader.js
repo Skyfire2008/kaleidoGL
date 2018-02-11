@@ -39,6 +39,9 @@ Program.prototype.use=function(){
 };
 
 function Texture(gl, img){
+	this.width=img.naturalWidth;
+	this.height=img.naturalHeight;
+	
 	//CONVERT IMAGE TO UINT8ARRAY
 	let c=document.createElement("canvas");
 	c.width=img.naturalWidth;
