@@ -36,6 +36,11 @@ document.addEventListener("DOMContentLoaded", function(e){
 		}
 	});
 
+	document.getElementById("sectorInput").addEventListener("change", function(e){
+		p.setFloat("angle", 2*Math.PI/e.target.valueAsNumber);
+		redraw();
+	});
+
 	//GET THE WEBGL CONTEXT
 	glCanvas=document.getElementById("glCanvas");
 	gl=glCanvas.getContext("webgl");
@@ -64,7 +69,11 @@ document.addEventListener("DOMContentLoaded", function(e){
 	gl.enableVertexAttribArray(gl.getAttribLocation(p.id, "pos"));
 
 	p.use();
-	p.setInt("wrapMode", 1);
+	p.setInt("wrapMode", 2);
 
-	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+	redraw();
 });
+
+redraw=function(){
+	gl.drawArrays(gl.TRIANGLE_STRIP, 0 ,4);
+};

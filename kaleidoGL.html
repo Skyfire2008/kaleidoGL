@@ -7,15 +7,20 @@
 
 	<body>
 		<script src="kaleidoGL.js"></script>
-		<div>
+		<div style="float: right">
 			<div>
 				<label for="fileInput">Select a file from your PC:</label><br/>
 				<input type="file" id="fileInput" accept="image/*"/>
 			</div>
-			<br>
+			<br/>
 			<div>
 				<label for="linkInput">...or select a file from the web:</label><br/>
 				<input type="text" id="linkInput"/>
+			</div>
+			<br/>
+			<div>
+				<label for="sectorInput">Number of sectors:</label>
+				<input type="number" min="1" max="360" step="1" id="sectorInput">
 			</div>
 		</div>
 		<div>
