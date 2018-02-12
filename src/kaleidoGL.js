@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function(e){
 					gl.activeTexture(gl.TEXTURE0);
 					gl.bindTexture(gl.TEXTURE_2D, tex.id);
 					p.setInt("tex", 0);
-					p.setVec2("imgScale", new vectors.Vec2(glCanvas.width/img.naturalWidth, glCanvas.height/img.naturalHeight));
+					p.setVec2("imgSize", new vectors.Vec2(img.naturalWidth, img.naturalHeight));
 					gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 				});
 				img.src=ev.target.result;
@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function(e){
 
 	p.use();
 	p.setInt("wrapMode", 2);
+	p.setVec2("canvasSize", new vectors.Vec2(glCanvas.width, glCanvas.height));
 
 	redraw();
 });

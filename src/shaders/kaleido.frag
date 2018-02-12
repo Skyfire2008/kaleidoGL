@@ -4,8 +4,9 @@ precision highp float;
 varying vec2 UV;
 uniform sampler2D tex;
 
-uniform vec2 imgScale;
 uniform int wrapMode;
+uniform vec2 canvasSize;
+uniform vec2 imgSize;
 
 uniform int kaleidoMode;
 uniform vec2 srcPos;
@@ -60,7 +61,7 @@ mat3 rotateMat(mat3 mat, float a){
 
 void main(){
 
-	vec2 relCoord=UV-resPos;
+	vec2 relCoord=(UV-resPos)*canvasSize;
 	float curAngle=atan(relCoord.y, relCoord.x)+PI;
 
 	float sectorNum=floor(curAngle/angle);
@@ -80,7 +81,17 @@ void main(){
 	vert=mat*vert;
 
    	//dst=sampleLinear(src, checkCoord(sourcePos+float2(vert.x, vert.y)));
-   	gl_FragColor=texture2D(tex, myWrap((srcPos+vec2(vert))*imgScale));
+   	gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+vec2(vert))/imgSize));
 
 	//gl_FragColor=texture2D(tex, myWrap((UV-vec2(0.5, 0.5))*imgScale));
+
+	/*mat3 mat=mat3(1.0);
+	mat=scaleMat(mat, canvasSize);
+	mat=rotateMat(mat, radians(60.0));
+	mat=scaleMat(mat, 1.0/imgSize);
+
+	vec3 vert=vec3(UV, 1.0);
+	vert=mat*vert;
+
+	gl_FragColor=texture2D(tex, myWrap(vec2(vert)));*/
 }
