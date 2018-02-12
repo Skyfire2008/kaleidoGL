@@ -69,10 +69,10 @@ void main(){
 	mat3 mat=mat3(1.0);
 
 	if(mod(sectorNum, 2.0)!=1.0){
-		mat=rotateMat(mat, -radians(startAngle));
+		mat=rotateMat(mat, -startAngle);
 		mat=rotateMat(mat, -angle*sectorNum);
 	}else{
-		mat=rotateMat(mat, radians(startAngle));
+		mat=rotateMat(mat, startAngle);
 		mat=rotateMat(mat, -angle*sectorNum-angle);
 		mat=scaleMat(mat, vec2(1.0, -1.0));
 	}

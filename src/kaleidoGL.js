@@ -70,6 +70,11 @@ document.addEventListener("DOMContentLoaded", function(e){
 		redraw();
 	});
 
+	document.getElementById("startAngleInput").addEventListener("change", function(e){
+		p.setFloat("startAngle", Math.PI*e.target.valueAsNumber/180);
+		redraw();
+	});
+
 	//GET THE WEBGL CONTEXT
 	glCanvas=document.getElementById("glCanvas");
 	gl=glCanvas.getContext("webgl");
@@ -99,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function(e){
 
 	p.use();
 	p.setInt("wrapMode", 2);
+	p.setFloat("angle", Math.PI);
 	p.setVec2("canvasSize", new vectors.Vec2(glCanvas.width, glCanvas.height));
 
 	redraw();
