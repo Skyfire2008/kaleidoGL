@@ -43,6 +43,13 @@ document.addEventListener("DOMContentLoaded", function(e){
 	document.getElementById("widthInput").value=canvasWidth;
 	document.getElementById("heightInput").value=canvasHeight;
 
+	//SET CONTROLS' STYLE
+	let controls=document.getElementById("controls");
+	let rect=glCanvas.getBoundingClientRect();
+	controls.style.position="absolute";
+	controls.style.top=rect.top+"px";
+	controls.style.left=rect.right+rect.left+"px";//top: +10px; left: 1280px";
+
 	//ATTACH EVENT LISTENERS TO UI ELEMENTS
 	document.getElementById("fileInput").addEventListener("change", function(e){
 		let input=e.target;
