@@ -1,4 +1,10 @@
 
+var storage;
+
+const defWidth=1280;
+const defHeight=720;
+var canvasWidth;
+var canvasHeight;
 var glCanvas;
 var gl;
 
@@ -6,6 +12,7 @@ var p;
 var quadBuf;
 var tex=null;
 
+var linkInput;
 var resXInput;
 var resYInput;
 var srcXInput;
@@ -16,6 +23,25 @@ var shader=require("./shader.js");
 var vectors=require("./vectors.js");
 
 document.addEventListener("DOMContentLoaded", function(e){
+
+	//SETUP THE CANVAS
+	glCanvas=document.getElementById("glCanvas");
+	storage=window.localStorage;
+	canvasWidth=storage.getItem("canvasWidth");
+	canvasHeight=storage.getItem("canvasHeight");
+	if(canvasWidth==null){
+		canvasWidth=defWidth;
+		storage.setItem("canvasWidth", canvasWidth);
+	}
+	if(canvasHeight==null){
+		canvasHeight=defHeight;
+		storage.setItem("canvasHeight", canvasHeight);
+	}
+	glCanvas.width=canvasWidth;
+	glCanvas.height=canvasHeight;
+
+	document.getElementById("widthInput").value=canvasWidth;
+	document.getElementById("heightInput").value=canvasHeight;
 
 	//ATTACH EVENT LISTENERS TO UI ELEMENTS
 	document.getElementById("fileInput").addEventListener("change", function(e){
@@ -33,12 +59,28 @@ document.addEventListener("DOMContentLoaded", function(e){
 					gl.bindTexture(gl.TEXTURE_2D, tex.id);
 					p.setInt("tex", 0);
 					p.setVec2("imgSize", new vectors.Vec2(img.naturalWidth, img.naturalHeight));
-					gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+					redraw();
 				});
 				img.src=ev.target.result;
+
 			});
 			fr.readAsDataURL(input.files[0]);
 		}
+	});
+
+	linkInput=document.getElementById("linkInput");
+	document.getElementById("linkButton").addEventListener("click", function(e){
+		let img=new Image();
+		img.crossOrigin="Anonymous";
+		img.addEventListener("load", function(ev){
+			tex=new shader.Texture(gl, img);
+			gl.activeTexture(gl.TEXTURE0);
+			gl.bindTexture(gl.TEXTURE_2D, tex.id);
+			p.setInt("tex", 0);
+			p.setVec2("imgSize", new vectors.Vec2(img.naturalWidth, img.naturalHeight));
+			redraw();
+		});
+		img.src=linkInput.value;
 	});
 
 	document.getElementById("sectorInput").addEventListener("change", function(e){
@@ -75,8 +117,23 @@ document.addEventListener("DOMContentLoaded", function(e){
 		redraw();
 	});
 
+	document.getElementById("applySizeChangeButton").addEventListener("click", function(e){
+		canvasWidth=document.getElementById("widthInput").valueAsNumber;
+		canvasHeight=document.getElementById("heightInput").valueAsNumber;
+		if(isNaN(canvasWidth) || canvasWidth<1){
+			canvasWidth=defWidth;
+		}
+		if(isNaN(canvasHeight) || canvasHeight<1){
+			canvasHeight=defHeight;
+		}
+
+		storage.setItem("canvasWidth", canvasWidth);
+		storage.setItem("canvasHeight", canvasHeight);
+
+		location.reload();
+	});
+
 	//GET THE WEBGL CONTEXT
-	glCanvas=document.getElementById("glCanvas");
 	gl=glCanvas.getContext("webgl");
 	if(gl==null){
 		alert("There was a problem creating webGL rendering context, your browser probably doesn't support it");

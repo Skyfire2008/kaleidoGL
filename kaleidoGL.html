@@ -7,7 +7,10 @@
 
 	<body>
 		<script src="kaleidoGL.js"></script>
-		<div style="float: right">
+		<div>
+			<canvas id="glCanvas" width="100" height="100"></canvas>
+		</div>
+		<div style="float: right; top: 10px; left: 1280px; position: absolute">
 			<div>
 				<label for="fileInput">Select a file from your PC:</label><br/>
 				<input type="file" id="fileInput" accept="image/*"/>
@@ -16,6 +19,7 @@
 			<div>
 				<label for="linkInput">...or select a file from the web:</label><br/>
 				<input type="text" id="linkInput"/>
+				<input type="button" id="linkButton" value="Upload">
 			</div>
 			<br/>
 			<div>
@@ -45,7 +49,11 @@
 			</div>
 		</div>
 		<div>
-			<canvas id="glCanvas" width="1280" height="720"></canvas>
+			<label for="widthInput">Canvas width:</label>
+			<input type="number" id="widthInput" min="1"/>
+			<label for="heightInput">Canvas height:</label>
+			<input type="number" id="heightInput" min="1"/>
+			<input type="button" id="applySizeChangeButton" value="Apply">
 		</div>
 	</body>
 </html>
