@@ -11,9 +11,10 @@ uniform vec2 imgSize;
 uniform int kaleidoMode;
 uniform vec2 srcPos;
 uniform vec2 resPos;
-uniform float sectors;
 uniform float angle;
 uniform float startAngle;
+
+uniform float sideLength;
 
 //MANUALLY WRAPS THE TEXTURE ACCORDING TO THE GIVEN MODE
 //0 - CLAMP (DEFAULT)
@@ -62,36 +63,44 @@ mat3 rotateMat(mat3 mat, float a){
 void main(){
 
 	vec2 relCoord=(UV-resPos)*canvasSize;
-	float curAngle=atan(relCoord.y, relCoord.x)+PI;
 
-	float sectorNum=floor(curAngle/angle);
+	if(kaleidoMode==1){
 
-	mat3 mat=mat3(1.0);
+		float s3=sqrt(3.0);
+		vec2 xVec=vec2(s3/2.0, 0.5);
+		vec2 yVec=vec2(-s3/2.0, 0.5);
 
-	if(mod(sectorNum, 2.0)!=1.0){
-		mat=rotateMat(mat, -startAngle);
-		mat=rotateMat(mat, -angle*sectorNum);
+		vec2 newCoord=vec2(dot(relCoord, xVec), dot(relCoord, yVec));
+		vec2 triCoord=floor(newCoord/(0.5*s3*sideLength));
+
+		bool top=mod(floor(relCoord.y/(0.5*s3*sideLength)), 2.0)==0.0;
+
+		//gl_FragColor=vec4(newCoord.x/10.0, newCoord.y/10.0, 0.5*float(top), 1.0);
+		vec2 foo=newCoord-triCoord*(0.5*s3*sideLength);
+		gl_FragColor=texture2D(tex, (foo.x*xVec+foo.y*yVec)/imgSize);
+
 	}else{
-		mat=rotateMat(mat, startAngle);
-		mat=rotateMat(mat, -angle*sectorNum-angle);
-		mat=scaleMat(mat, vec2(1.0, -1.0));
-	}
 
-	vec3 vert=vec3(relCoord, 1.0);
-	vert=mat*vert;
+		float curAngle=atan(relCoord.y, relCoord.x)+PI;
 
-   	//dst=sampleLinear(src, checkCoord(sourcePos+float2(vert.x, vert.y)));
-   	gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+vec2(vert))/imgSize));
+		float sectorNum=floor(curAngle/angle);
 
-	//gl_FragColor=texture2D(tex, myWrap((UV-vec2(0.5, 0.5))*imgScale));
+		mat3 mat=mat3(1.0);
 
-	/*mat3 mat=mat3(1.0);
-	mat=scaleMat(mat, canvasSize);
-	mat=rotateMat(mat, radians(60.0));
-	mat=scaleMat(mat, 1.0/imgSize);
+		if(mod(sectorNum, 2.0)!=1.0){
+			mat=rotateMat(mat, -startAngle);
+			mat=rotateMat(mat, -angle*sectorNum);
+		}else{
+			mat=rotateMat(mat, startAngle);
+			mat=rotateMat(mat, -angle*sectorNum-angle);
+			mat=scaleMat(mat, vec2(1.0, -1.0));
+		}
 
-	vec3 vert=vec3(UV, 1.0);
-	vert=mat*vert;
+		vec3 vert=vec3(relCoord, 1.0);
+		vert=mat*vert;
 
-	gl_FragColor=texture2D(tex, myWrap(vec2(vert)));*/
+   		gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+vec2(vert))/imgSize));
+
+   	}
+
 }

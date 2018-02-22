@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function(e){
 	let rect=glCanvas.getBoundingClientRect();
 	controls.style.position="absolute";
 	controls.style.top=rect.top+"px";
-	controls.style.left=rect.right+rect.left+"px";//top: +10px; left: 1280px";
+	controls.style.left=rect.right+rect.left+"px";
 
 	//ATTACH EVENT LISTENERS TO UI ELEMENTS
 	document.getElementById("fileInput").addEventListener("change", function(e){
@@ -73,6 +73,16 @@ document.addEventListener("DOMContentLoaded", function(e){
 			});
 			fr.readAsDataURL(input.files[0]);
 		}
+	});
+
+	document.getElementById("kaleidoMode").addEventListener("change", function(e){
+		p.setInt("kaleidoMode", e.target.value);
+		redraw();
+	});
+
+	document.getElementById("sideLengthInput").addEventListener("change", function(e){
+		p.setFloat("sideLength", e.target.valueAsNumber);
+		redraw();
 	});
 
 	linkInput=document.getElementById("linkInput");
