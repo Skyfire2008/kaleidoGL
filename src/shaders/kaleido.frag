@@ -79,20 +79,20 @@ void main(){
 		mat=scaleMat(mat, vec2(sqrt(1.5), sqrt(0.5)));
 		mat=rotateMat(mat, -PI/4.0);
 
-		mat3 invMat=mat3(1.0);
+		mat3 invMat=mat3(1.0); //inverse transformation matrix
 		invMat=rotateMat(invMat, PI/4.0);
 		invMat=scaleMat(invMat, vec2(sqrt(2.0/3.0), sqrt(2.0)));
 
-		float corLen=sideLength*sqrt(3.0)/2.0;
+		float corLen=sideLength*sqrt(3.0)/2.0; //corrected side length
 
-		vec2 newCoord=vec2(mat*vec3(relCoord, 1.0));
+		vec2 newCoord=vec2(mat*vec3(relCoord, 1.0)); //coordinate transofmred into new coordinate system
 		vec2 triCoord=floor(newCoord/corLen);
 
 		//calculate triangle coordinates and number of case
 		vec2 modTriCoord=mod(triCoord, 3.0);
 
-		bool bot=(mod(floor(relCoord.y/corLen), 2.0)==1.0) ^^ (mod(triCoord.x+triCoord.y, 2.0)==1.0);
-		vec2 realTriCoord=vec2(invMat*vec3(triCoord*corLen, 1.0));
+		bool bot=(mod(floor(relCoord.y/corLen), 2.0)==1.0) ^^ (mod(triCoord.x+triCoord.y, 2.0)==1.0); //indicates whether the points is in a bottom or top triangle
+		vec2 realTriCoord=vec2(invMat*vec3(triCoord*corLen, 1.0)); //triangle coordinates
 		if(bot){
 			realTriCoord.y+=2.0/sqrt(3.0)*sideLength;
 		}else{
@@ -101,7 +101,7 @@ void main(){
 
 		vec2 inCoord=relCoord-realTriCoord;
 
-		int num=int(mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + float(bot), 6.0));
+		int num=int(mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + float(bot), 6.0)); //case number
 
 		if(num==1){
 			inCoord.y=-inCoord.y;
@@ -119,22 +119,7 @@ void main(){
 
 		inCoord=rotateVec(inCoord, startAngle);
 
-		/*vec2 modTriCoord=mod(triCoord, 3.0);
-
-		bool top=mod(floor(relCoord.y/(0.5*s3*sideLength)), 2.0)==0.0 ^^ mod(modTriCoord.x+modTriCoord.y, 2.0)==1.0;
-
-		vec2 foo=newCoord-triCoord*(0.5*s3*sideLength);
-
-		float num=mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + 1.0-float(top), 6.0);*/
 		gl_FragColor=texture2D(tex, myWrap( (srcPos*canvasSize + inCoord)/imgSize ));
-
-		//gl_FragColor=vec4(num/6.0, 0.0, 0.0, 1.0);
-
-		//gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+vec2(invMat*vec3(newCoord-triCoord*corLen, 1.0)))/imgSize));
-
-		//gl_FragColor=vec4(0.0, triCoord/10.0, 1.0);
-
-		//gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+(foo.x*xVec+foo.y*yVec)*vec2(2.0/3.0, 2.0))/imgSize));
 
 	}else{
 
