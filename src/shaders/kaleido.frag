@@ -46,6 +46,14 @@ vec2 myWrap(vec2 coords){
 
 }
 
+vec2 rotateVec(vec2 vec, float a){
+	mat3 rMat=mat3(cos(a), sin(a), 0.0,
+    			  -sin(a), cos(a), 0.0,
+    			      0.0,    0.0, 1.0);
+
+	return vec2(rMat*vec3(vec, 1.0));
+}
+
 mat3 scaleMat(mat3 mat, vec2 sc){
 	mat3 sMat=mat3(sc.x, 0.0,  0.0,
 				   0.0,  sc.y, 0.0,
@@ -66,20 +74,48 @@ void main(){
 
 	if(kaleidoMode==1){
 
-		float s3=sqrt(3.0);
-		vec2 xVec=vec2(s3/2.0, 0.5);
-		vec2 yVec=vec2(-s3/2.0, 0.5);
+		//convert into a diamond coordinate system
+		mat3 mat=mat3(1.0);
+		mat=scaleMat(mat, vec2(sqrt(1.5), sqrt(0.5)));
+		mat=rotateMat(mat, -PI/4.0);
 
-		vec2 newCoord=vec2(dot(relCoord, xVec), dot(relCoord, yVec));
-		vec2 triCoord=floor(newCoord/(0.5*s3*sideLength));
+		mat3 invMat=mat3(1.0);
+		invMat=rotateMat(invMat, PI/4.0);
+		invMat=scaleMat(invMat, vec2(sqrt(2.0/3.0), sqrt(2.0)));
+
+		float corLen=sideLength*sqrt(3.0)/2.0;
+
+		vec2 newCoord=vec2(mat*vec3(relCoord, 1.0));
+		vec2 triCoord=floor(newCoord/corLen);
+		vec2 inCoord=newCoord-triCoord*corLen;
+
+		//calculate triangle coordinates and number of case
 		vec2 modTriCoord=mod(triCoord, 3.0);
+
+		bool bot=(mod(floor(relCoord.y/corLen), 2.0)==1.0) ^^ (mod(triCoord.x+triCoord.y, 2.0)==1.0);
+
+		int num=int(mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + float(bot), 6.0));
+
+		if(num==2){
+			inCoord=rotateVec(inCoord, PI/6.0);
+		}else if(num==4){
+			inCoord=rotateVec(inCoord, -PI/6.0);
+		}
+
+		/*vec2 modTriCoord=mod(triCoord, 3.0);
 
 		bool top=mod(floor(relCoord.y/(0.5*s3*sideLength)), 2.0)==0.0 ^^ mod(modTriCoord.x+modTriCoord.y, 2.0)==1.0;
 
 		vec2 foo=newCoord-triCoord*(0.5*s3*sideLength);
 
-		float num=mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + 1.0-float(top), 6.0);
-		gl_FragColor=vec4(0.0, num/6.0, top, 1.0);
+		float num=mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + 1.0-float(top), 6.0);*/
+		gl_FragColor=texture2D(tex, myWrap( (srcPos*canvasSize + vec2(invMat*vec3(inCoord, 1.0)))/imgSize ));
+
+		//gl_FragColor=vec4(num/6.0, 0.0, 0.0, 1.0);
+
+		//gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+vec2(invMat*vec3(newCoord-triCoord*corLen, 1.0)))/imgSize));
+
+		//gl_FragColor=vec4(0.0, triCoord/10.0, 1.0);
 
 		//gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+(foo.x*xVec+foo.y*yVec)*vec2(2.0/3.0, 2.0))/imgSize));
 
