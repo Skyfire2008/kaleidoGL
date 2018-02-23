@@ -72,12 +72,16 @@ void main(){
 
 		vec2 newCoord=vec2(dot(relCoord, xVec), dot(relCoord, yVec));
 		vec2 triCoord=floor(newCoord/(0.5*s3*sideLength));
+		vec2 modTriCoord=mod(triCoord, 3.0);
 
-		bool top=mod(floor(relCoord.y/(0.5*s3*sideLength)), 2.0)==0.0;
+		bool top=mod(floor(relCoord.y/(0.5*s3*sideLength)), 2.0)==0.0 ^^ mod(modTriCoord.x+modTriCoord.y, 2.0)==1.0;
 
-		//gl_FragColor=vec4(newCoord.x/10.0, newCoord.y/10.0, 0.5*float(top), 1.0);
 		vec2 foo=newCoord-triCoord*(0.5*s3*sideLength);
-		gl_FragColor=texture2D(tex, (foo.x*xVec+foo.y*yVec)/imgSize);
+
+		float num=mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + 1.0-float(top), 6.0);
+		gl_FragColor=vec4(0.0, num/6.0, top, 1.0);
+
+		//gl_FragColor=texture2D(tex, myWrap((srcPos*canvasSize+(foo.x*xVec+foo.y*yVec)*vec2(2.0/3.0, 2.0))/imgSize));
 
 	}else{
 
