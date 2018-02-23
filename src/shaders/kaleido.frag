@@ -87,20 +87,37 @@ void main(){
 
 		vec2 newCoord=vec2(mat*vec3(relCoord, 1.0));
 		vec2 triCoord=floor(newCoord/corLen);
-		vec2 inCoord=newCoord-triCoord*corLen;
 
 		//calculate triangle coordinates and number of case
 		vec2 modTriCoord=mod(triCoord, 3.0);
 
 		bool bot=(mod(floor(relCoord.y/corLen), 2.0)==1.0) ^^ (mod(triCoord.x+triCoord.y, 2.0)==1.0);
+		vec2 realTriCoord=vec2(invMat*vec3(triCoord*corLen, 1.0));
+		if(bot){
+			realTriCoord.y+=2.0/sqrt(3.0)*sideLength;
+		}else{
+			realTriCoord.y+=1.0/sqrt(3.0)*sideLength;
+		}
+
+		vec2 inCoord=relCoord-realTriCoord;
 
 		int num=int(mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + float(bot), 6.0));
 
-		if(num==2){
-			inCoord=rotateVec(inCoord, PI/6.0);
+		if(num==1){
+			inCoord.y=-inCoord.y;
+		}else if(num==2){
+			inCoord=rotateVec(inCoord, PI*2.0/3.0);
+		}else if(num==3){
+			inCoord.x=-inCoord.x;
+			inCoord=rotateVec(inCoord, -PI/3.0);
 		}else if(num==4){
-			inCoord=rotateVec(inCoord, -PI/6.0);
+			inCoord=rotateVec(inCoord, -PI*2.0/3.0);
+		}else if(num==5){
+			inCoord.x=-inCoord.x;
+            inCoord=rotateVec(inCoord, PI/3.0);
 		}
+
+		inCoord=rotateVec(inCoord, startAngle);
 
 		/*vec2 modTriCoord=mod(triCoord, 3.0);
 
@@ -109,7 +126,7 @@ void main(){
 		vec2 foo=newCoord-triCoord*(0.5*s3*sideLength);
 
 		float num=mod(2.0*modTriCoord.x + 2.0*(3.0-modTriCoord.y) + 1.0-float(top), 6.0);*/
-		gl_FragColor=texture2D(tex, myWrap( (srcPos*canvasSize + vec2(invMat*vec3(inCoord, 1.0)))/imgSize ));
+		gl_FragColor=texture2D(tex, myWrap( (srcPos*canvasSize + inCoord)/imgSize ));
 
 		//gl_FragColor=vec4(num/6.0, 0.0, 0.0, 1.0);
 
