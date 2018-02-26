@@ -97,7 +97,21 @@ document.addEventListener("DOMContentLoaded", function(e){
 			p.setVec2("imgSize", new vectors.Vec2(img.naturalWidth, img.naturalHeight));
 			redraw();
 		});
+
+		//if cannot download image from another origin, try using crossorigin.me
+		//switch between two error functions
+		let errFunc2=function(ev){
+			alert("Could not download image from "+linkInput.value);
+			img.onerror=errFunc1;
+		};
+		let errFunc1=function(ev){
+			img.src="https://crossorigin.me/"+linkInput.value;
+			img.onerror=errFunc2;
+		};
+		img.onerror=errFunc1;
+
 		img.src=linkInput.value;
+
 	});
 
 	document.getElementById("sectorInput").addEventListener("change", function(e){
