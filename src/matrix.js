@@ -1,10 +1,10 @@
 function Matrix3x3(values){
 	
-	if(value===undefined){
+	if(values===undefined){
 		this.m=new Float32Array(9);
-		m[0]=1;
-		m[4]=1;
-		m[8]=1;
+		this.m[0]=1;
+		this.m[4]=1;
+		this.m[8]=1;
 	}else{
 		this.m=Float32Array.from(values);
 	}
