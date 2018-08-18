@@ -1,3 +1,5 @@
+var Vec2=require("vectors.js").Vec2;
+
 function Matrix3x3(values){
 	
 	if(values===undefined){
@@ -22,10 +24,14 @@ Matrix3x3.prototype.mult=function(other){
 	values[5]=this.m[2]*other.m[3]+this.m[5]*other.m[4]+this.m[8]*other.m[5];
 
 	values[6]=this.m[0]*other.m[6]+this.m[3]*other.m[7]+this.m[6]*other.m[8];
-	values[7]=this.m[0]*other.m[6]+this.m[3]*other.m[7]+this.m[6]*other.m[8];
-	values[8]=this.m[0]*other.m[6]+this.m[3]*other.m[7]+this.m[6]*other.m[8];
+	values[7]=this.m[1]*other.m[6]+this.m[4]*other.m[7]+this.m[7]*other.m[8];
+	values[8]=this.m[2]*other.m[6]+this.m[5]*other.m[7]+this.m[8]*other.m[8];
 
 	return new Matrix3x3(values);
+}
+
+Matrix3x3.prototype.apply=function(vec){
+
 }
 
 Matrix3x3.transMat=function(vec){
