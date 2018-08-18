@@ -40,6 +40,8 @@ Matrix3x3.scaleMat=function(vec){
 	let result=new Matrix3x3();
 	result.m[0]=vec.x;
 	result.m[4]=vec.y;
+
+	return result;
 }
 
 module.exports={
