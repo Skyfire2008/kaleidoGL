@@ -1,5 +1,3 @@
-var Vec2=require("vectors.js").Vec2;
-
 function Matrix3x3(values){
 	
 	if(values===undefined){
