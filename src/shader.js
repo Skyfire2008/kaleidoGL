@@ -34,7 +34,7 @@ Program.prototype.setVec3=function(name, val){
 	this.gl.uniform3f(this.gl.getUniformLocation(this.id, name), val.x, val.y, val.z);
 };
 
-Program.protoype.setMat3=function(name, val){
+Program.prototype.setMat3=function(name, val){
 	this.gl.uniformMatrix3fv(this.gl.getUniformLocation(this.id, name), false, val.m);
 }
 
